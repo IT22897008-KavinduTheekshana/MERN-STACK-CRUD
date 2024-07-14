@@ -2,6 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
+import route from './routes/userRoute.js'
 
 const app = express()
 app.use(bodyParser.json())
@@ -15,7 +16,9 @@ mongoose
   .then(() => {
     console.log('Connected to MongoDB')
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`)
+      console.log(`server is running on port: ${PORT}`)
     })
   })
   .catch((error) => console.error('Could not connect to MongoDB:', error))
+
+app.use('/api', route)
