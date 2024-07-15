@@ -1,6 +1,7 @@
 import User from "../model/userModel.js";
 
-export const create = async (req, res, next) => {
+// Create a new user
+export const create = async (req, res) => {
     try {
         const { email } = req.body;
 
@@ -12,6 +13,19 @@ export const create = async (req, res, next) => {
         const newUser = new User(req.body);
         await newUser.save();
         res.status(201).json({ message: "User created successfully", user: newUser });
+    } catch (error) {
+        res.status(500).json({ errorMessage: error.message });
+    }
+};
+
+// Get all users
+export const getAllUsers = async (req, res) => {
+    try {
+        const userData = await User.find();
+        if (!userData || userData.length === 0) {
+            return res.status(404).json({ message: "No users found" });
+        }
+        res.status(200).json(userData);
     } catch (error) {
         res.status(500).json({ errorMessage: error.message });
     }
