@@ -1,12 +1,28 @@
-import React from 'react'
-import './user.css'
+import React, { useEffect, useState } from 'react';
+import './user.css';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const User = () => {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/api/users');
+        setUsers(response.data);
+      } catch (error) {
+        console.log('Error while fetching data', error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <div className="userTable">
-      <button type="button" class="btn btn-primary">
-        Add User <i class="fa-solid fa-user-plus"></i>
-      </button>
+      <Link to="/add" type="button" className="btn btn-primary">
+        Add User <i className="fa-solid fa-user-plus"></i>
+      </Link>
       <table className="table table-bordered">
         <thead>
           <tr>
@@ -18,24 +34,26 @@ const User = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Kavindu</td>
-            <td>kavindu@gmail.com</td>
-            <td>COLOMBO</td>
-            <td className='actionButtons'>
-              <button type="button" class="btn btn-info">
-                <i class="fa-solid fa-pen-to-square"></i>
-              </button>
-              <button type="button" class="btn btn-danger">
-                <i class="fa-solid fa-trash"></i>
-              </button>
-            </td>
-          </tr>
+          {users.map((user, index) => (
+            <tr key={user._id}>
+              <th scope="row">{index + 1}</th>
+              <td>{user.name}</td>
+              <td>{user.email}</td>
+              <td>{user.address}</td>
+              <td className="actionButtons">
+                <button type="button" className="btn btn-info">
+                  <i className="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button type="button" className="btn btn-danger">
+                  <i className="fa-solid fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
-  )
-}
+  );
+};
 
-export default User
+export default User;
